@@ -1,8 +1,8 @@
 #!/bin/bash
 clear
 
-DOWNLOAD_PATH="~/storage/shared/Download/"
-PLAYLIST="%(extractor)s/playlists/%(playlist_title)s_%(playlist_id)s/%(n_entries-playlist_index)03d - %(uploader)s - %(title)s [%(id)s].%(ext)s"
+DOWNLOAD_PATH="~/YouTube-DL"
+PLAYLIST="%(extractor)s/playlists/%(playlist_title)s_%(playlist_id)s/%(playlist_index)03d - %(uploader)s - %(title)s [%(id)s].%(ext)s"
 CHANNEL="%(extractor)s/channel/%(uploader)s_%(channel_id)s/%(title)s [%(id)s].%(ext)s"
 CONFIG_PATH="${HOME}/.config/yt-dlp/"
 
@@ -30,15 +30,20 @@ function isSponsorblockAlive() {
 function downloadVideo() {
     echo -e "\\nDownloading video...\\n"
     yt-dlp --config-locations "${CONFIG_PATH}config" -F "$1"
-    echo_warning "Choose your video quality (<enter> for: 'best'):"
+    echo_warning "Choose your video quality (<enter> for: '1080'):"
     read -p "" video
+    echo_warning "Choose video format (best (default), avi, flv, gif, mkv, mov, mp4, webm, aac, aiff, alac, flac, m4a, mka, mp3, ogg, opus, vorbis, wav)"
+    read -p "" format
     echo_warning "Choose your audio quality (<enter> for: 'best'):"
     read -p "" audio
     echo_warning "Input video name:"
     read -p "" name
-
+    
+    if [[ "$format" = "" ]]; then
+        format="best"
+    fi
     if [[ "$video" = "" ]]; then
-        video="best"
+        video="1080"
     fi
     if [[ "$audio" = "" ]]; then
         audio="best"
@@ -48,10 +53,10 @@ function downloadVideo() {
     fi
     if isSponsorblockAlive; then
         # sucess
-        yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -o "$name" -f "$video"+"$audio" "$1"
+        yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -o "$name" -f "$format"+"$audio" -S "res:$video" "$1"
     else
         # fail
-        yt-dlp --config-locations "${CONFIG_PATH}config" -o "$name" -f "$video"+"$audio" "$1"
+        yt-dlp --config-locations "${CONFIG_PATH}config" -o "$name" -f "$format"+"$audio" -S "res:$video" "$1"
     fi
 }
 
@@ -66,20 +71,75 @@ function downloadChannel() {
 
 function downloadPlaylist() {
     echo "Downloading playlist..."
-    if isSponsorblockAlive; then
-        yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -P $DOWNLOAD_PATH -o "$PLAYLIST" "$1"
-    else
-        yt-dlp --config-locations "${CONFIG_PATH}config" -P $DOWNLOAD_PATH -o "$PLAYLIST" "$1"
-    fi
+    echo_warning "Choose between the following options:"
+    echo_bold "1. Video mode (choose quality and name)"
+    echo_bold "2. Audio only mode"
+
+    echo_warning "Enter your choice:"
+    read -p "" choice
+
+    case $choice in
+    1)
+        echo_warning "Choose your video quality (<enter> for: 'best'):"
+        read -p "" video
+        echo_warning "Choose video format (best (default), avi, flv, gif, mkv, mov, mp4, webm, aac, aiff, alac, flac, m4a, mka, mp3, ogg, opus, vorbis, wav)"
+        read -p "" format
+        echo_warning "Choose your audio quality (<enter> for: 'best'):"
+        read -p "" audio
+
+        if [[ "$format" = "" ]]; then
+            format="best"
+        fi
+        if [[ "$video" = "" ]]; then
+            video="1080"
+        fi
+        if [[ "$audio" = "" ]]; then
+            audio="best"
+        fi
+
+        if isSponsorblockAlive; then
+            yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -P $DOWNLOAD_PATH -o "$PLAYLIST" -f "$format"+"$audio" -S "res:$video" "$1"
+        else
+            yt-dlp --config-locations "${CONFIG_PATH}config" -P $DOWNLOAD_PATH -o "$PLAYLIST" -f "$format"+"$audio" -S "res:$video" "$1"
+        fi
+        ;;
+    2)
+        
+
+        echo_warning "Choose audio format (best (default), aac, alac, flac, m4a, mp3, opus, vorbis, wav)"
+        read -p "" format
+
+        if [[ "$format" = "" ]]; then
+            format="best"
+        fi
+
+        if isSponsorblockAlive; then
+            yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -P $DOWNLOAD_PATH -o "$PLAYLIST" -x --audio-format $format "$1"
+        else
+            yt-dlp --config-locations "${CONFIG_PATH}config" -P $DOWNLOAD_PATH -o "$PLAYLIST" -x --audio-format $format "$1"
+        fi
+        ;;
+    *)
+        echo_error "\\nInvalid choice!\\n"
+        ;;
+    esac
 
 }
 
 function downloadAudio() {
     echo "Downloading audio..."
+
+    echo_warning "Choose audio format (best (default), aac, alac, flac, m4a, mp3, opus, vorbis, wav)"
+    read -p "" format
+
+    if [[ "$format" = "" ]]; then
+        format="best"
+    fi
+    
     if isSponsorblockAlive; then
-        yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -P $DOWNLOAD_PATH -x "$1"
+        yt-dlp --config-locations "${CONFIG_PATH}sponsorblock.conf" -P $DOWNLOAD_PATH -x --audio-format $format "$1"
     else
-        yt-dlp --config-locations "${CONFIG_PATH}config" -P $DOWNLOAD_PATH -x "$1"
+        yt-dlp --config-locations "${CONFIG_PATH}config" -P $DOWNLOAD_PATH -x --audio-format $format "$1"
     fi
 }
 
