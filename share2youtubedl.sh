@@ -149,8 +149,8 @@ if [[ "$1" =~ ^.*youtu.*$ ]] || [[ "$1" =~ ^.*youtube.*$ ]]; then
     echo_warning "Choose between the following options:"
     echo_bold "1. Video mode (choose quality and name)"
     echo_bold "2. Playlist mode"
-    echo_bold "3. Channel mode"
-    echo_bold "4. Audio only mode"
+    echo_bold "3. Audio only mode"
+    echo_bold "4. Channel mode"
 
     echo_warning "Enter your choice:"
     read -p "" choice
@@ -163,10 +163,10 @@ if [[ "$1" =~ ^.*youtu.*$ ]] || [[ "$1" =~ ^.*youtube.*$ ]]; then
         downloadPlaylist "$1"
         ;;
     3)
-        downloadChannel "$1"
+        downloadAudio "$1"
         ;;
     4)
-        downloadAudio "$1"
+        downloadChannel "$1"
         ;;
     *)
         echo_error "\\nInvalid choice!\\n"
