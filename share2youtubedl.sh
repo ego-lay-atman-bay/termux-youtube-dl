@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 
-DOWNLOAD_PATH="~/YouTube-DL"
+DOWNLOAD_PATH="${HOME}/storage/shared/YouTube-DL"
 PLAYLIST="%(extractor)s/playlists/%(playlist_title)s_%(playlist_id)s/%(playlist_index)03d - %(uploader)s - %(title)s [%(id)s].%(ext)s"
 CHANNEL="%(extractor)s/channel/%(uploader)s_%(channel_id)s/%(title)s [%(id)s].%(ext)s"
 CONFIG_PATH="${HOME}/.config/yt-dlp/"
