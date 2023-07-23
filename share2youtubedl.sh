@@ -80,7 +80,7 @@ function downloadPlaylist() {
 
     case $choice in
     1)
-        echo_warning "Choose your video quality (<enter> for: 'best'):"
+        echo_warning "Choose your video quality (<enter> for: '1080'):"
         read -p "" video
         echo_warning "Choose video format (best (default), avi, flv, gif, mkv, mov, mp4, webm, aac, aiff, alac, flac, m4a, mka, mp3, ogg, opus, vorbis, wav)"
         read -p "" format
