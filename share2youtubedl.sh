@@ -2,8 +2,8 @@
 clear
 
 DOWNLOAD_PATH="${HOME}/storage/shared/YouTube-DL"
-PLAYLIST="%(extractor)s/playlists/%(playlist_title)s_%(playlist_id)s/%(playlist_index)03d - %(uploader)s - %(title)s [%(id)s].%(ext)s"
-CHANNEL="%(extractor)s/channel/%(uploader)s_%(channel_id)s/%(title)s [%(id)s].%(ext)s"
+PLAYLIST="%(extractor)s/playlists/%(playlist_title)s_/%(playlist_index)03d - %(uploader)s - %(title)s.%(ext)s"
+CHANNEL="%(extractor)s/channel/%(uploader)s_%(channel_id)s/%(title)s.%(ext)s"
 CONFIG_PATH="${HOME}/.config/yt-dlp/"
 
 function echo_bold() { echo -ne "\033[0;1;34m${*}${NC}\n"; }
