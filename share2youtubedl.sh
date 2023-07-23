@@ -49,7 +49,7 @@ function downloadVideo() {
         audio="best"
     fi
     if [[ "$name" = "" ]]; then
-        name="%(title).40s [%(id)s].%(ext)s"
+        name="%(title).40s.%(ext)s"
     fi
     if isSponsorblockAlive; then
         # sucess
